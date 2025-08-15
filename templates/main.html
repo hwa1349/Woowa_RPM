@@ -1,5 +1,100 @@
-from flask import render_template
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>RPM 멀티툴</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+body {
+  background-color: #f8f9fa;
+  padding: 30px;
+}
+.container {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+  max-width: 700px;
+  margin: auto;
+}
+textarea.form-control {
+  height: 120px;
+  font-size: 1.1rem;
+}
+pre.result-output {
+  background-color: #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+  height: 180px;
+  overflow-y: scroll;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 0.95rem;
+}
+.logout-btn {
+  float: right;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="d-flex justify-content-between mb-3">
+    <h2>RPM 멀티툴</h2>
+    <a href="/logout" class="btn btn-outline-secondary logout-btn">로그아웃</a>
+  </div>
 
-@app.route('/main')
-def main():
-    return render_template('main.html', checker_result=None, inputter_result=None, segment_result=None)
+  <!-- 탭 네비게이션 -->
+  <ul class="nav nav-tabs" id="rpmTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="checker-tab" data-bs-toggle="tab" data-bs-target="#checker" type="button">자동 검토</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="inputter-tab" data-bs-toggle="tab" data-bs-target="#inputter" type="button">결과 자동입력</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="segment-tab" data-bs-toggle="tab" data-bs-target="#segment" type="button">세그먼트 자동 클릭</button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-3">
+    <!-- 자동 검토 탭 -->
+    <div class="tab-pane fade show active" id="checker" role="tabpanel">
+      <form method="post" action="/run_checker">
+        <label for="promo_ids" class="form-label">프로모션 ID (콤마 또는 줄바꿈 구분)</label>
+        <textarea id="promo_ids" name="promo_ids" class="form-control" placeholder="예: 12345, 23456"></textarea>
+        <button type="submit" class="btn btn-primary mt-3 w-100">자동 검토 실행</button>
+      </form>
+      {% if checker_result %}
+      <pre class="result-output mt-3">{{ checker_result }}</pre>
+      {% endif %}
+    </div>
+
+    <!-- 결과 자동입력 탭 -->
+    <div class="tab-pane fade" id="inputter" role="tabpanel">
+      <form method="post" action="/run_inputter">
+        <label for="mission_ids" class="form-label">미션 ID 입력</label>
+        <textarea id="mission_ids" name="mission_ids" class="form-control" placeholder="미션 ID를 입력하세요"></textarea>
+        <button type="submit" class="btn btn-primary mt-3 w-100">결과 입력 실행</button>
+      </form>
+      {% if inputter_result %}
+      <pre class="result-output mt-3">{{ inputter_result }}</pre>
+      {% endif %}
+    </div>
+
+    <!-- 세그먼트 자동 클릭 탭 -->
+    <div class="tab-pane fade" id="segment" role="tabpanel">
+      <form method="post" action="/run_segment_clicker">
+        <label for="segment_ids" class="form-label">세그먼트 번호 목록</label>
+        <textarea id="segment_ids" name="segment_ids" class="form-control" placeholder="예: 101, 102, 103"></textarea>
+        <button type="submit" class="btn btn-primary mt-3 w-100">세그먼트 작업 실행</button>
+      </form>
+      {% if segment_result %}
+      <pre class="result-output mt-3">{{ segment_result }}</pre>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
