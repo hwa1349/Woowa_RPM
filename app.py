@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import gspread
@@ -14,7 +14,7 @@ def load_whitelist(filename='whitelist.txt'):
     try:
         with open(filename, 'r', encoding='utf-8') as f:
             return set(line.strip() for line in f if line.strip())
-    except Exception:
+    except:
         return set()
 
 ALLOWED_IDS = load_whitelist()
@@ -42,15 +42,15 @@ def main():
                            segment_result=None)
 
 def create_new_driver():
-    driver_path = ChromeDriverManager().install()
-    opts = webdriver.ChromeOptions()
-    opts.add_argument("--headless=new")
-    opts.add_argument("--window-size=1920,1080")
-    opts.add_argument("--disable-gpu")
-    opts.add_argument("--no-sandbox")
-    opts.add_experimental_option("excludeSwitches", ["enable-logging"])
-    service = Service(driver_path)
-    return webdriver.Chrome(service=service, options=opts)
+    options = webdriver.ChromeOptions()
+    options.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+    options.add_argument("--headless=new")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    service = Service(ChromeDriverManager().install())
+    return webdriver.Chrome(service=service, options=options)
 
 @app.route('/run_checker', methods=['POST'])
 def run_checker():
@@ -64,14 +64,15 @@ def run_checker():
     driver = None
     try:
         driver = create_new_driver()
+        # 로그인 처리
         driver.get("https://auth-web.woowa.in/login?targetUrl=http://rpm.woowa.in")
         WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.ID, "username"))).send_keys(username)
         driver.find_element(By.ID, "password").send_keys(password)
         driver.find_element(By.ID, "btnSubmit").click()
         WebDriverWait(driver, 7).until(EC.url_contains("rpm.woowa.in"))
         for pid in id_list:
-            # 여기에 기존 자동 검토 기능 구현
-            result_out += f"ID: {pid} 검토 결과: (여기에 결과 출력)\n"
+            # 여기에 자동 검토 기능 핵심 구현 부분 추가
+            result_out += f"ID: {pid} 검토 결과: (구현 필요)\n"
     except Exception as e:
         result_out += f"오류 발생: {str(e)}"
     finally:
@@ -88,11 +89,9 @@ def run_inputter():
         return redirect(url_for('login'))
     mission_ids = request.form.get('mission_ids', '')
     id_list = [x.strip() for x in mission_ids.replace('\n', ',').split(',') if x.strip()]
-    username = session.get('user')
-    password = session.get('pw')
     result_out = ""
-    # 여기에 기존 결과 자동입력 기능 구현
-    result_out = "결과 자동입력 기능 실행 완료 (예시)"
+    # 결과 자동입력 기능 구현 부분 추가
+    result_out = "결과 자동입력 기능 실행 완료 (구현 필요)"
     return render_template('main.html',
                            checker_result=None,
                            inputter_result=result_out,
@@ -104,11 +103,9 @@ def run_segment_clicker():
         return redirect(url_for('login'))
     segment_ids = request.form.get('segment_ids', '')
     id_list = [x.strip() for x in segment_ids.replace('\n', ',').split(',') if x.strip()]
-    username = session.get('user')
-    password = session.get('pw')
     result_out = ""
-    # 여기에 기존 세그먼트 자동 클릭 기능 구현
-    result_out = "세그먼트 자동 클릭 기능 실행 완료 (예시)"
+    # 세그먼트 자동 클릭 기능 구현 부분 추가
+    result_out = "세그먼트 자동 클릭 기능 실행 완료 (구현 필요)"
     return render_template('main.html',
                            checker_result=None,
                            inputter_result=None,
