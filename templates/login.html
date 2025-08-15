@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>로그인 - RPM 멀티툴</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+body {
+  background-color: #f5f7fa;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-container {
+  background: white;
+  padding: 40px 50px;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+  width: 380px;
+  text-align: center;
+}
+input.form-control {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+button.pw-toggle {
+  cursor: pointer;
+  margin-bottom: 25px;
+  background: none;
+  border: none;
+  color: #3d76e2;
+}
+button.pw-toggle:hover {
+  text-decoration: underline;
+}
+button.login-btn {
+  font-size: 1.25rem;
+  width: 100%;
+}
+</style>
+</head>
+<body>
+<div class="login-container">
+  <h2>RPM 멀티툴 웹 로그인</h2>
+  <form method="POST" action="/">
+    <input type="text" name="username" class="form-control" placeholder="RPM ID" required />
+    <input type="password" name="password" class="form-control" id="pw_input" placeholder="RPM PW" required />
+    <button type="button" class="pw-toggle" onclick="togglePW()">PW 보기</button>
+    <button type="submit" class="btn btn-primary login-btn">로그인</button>
+  </form>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div class="mt-3 text-danger">
+    {% for message in messages %}
+    <div><b>{{ message }}</b></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+</div>
+<script>
+function togglePW() {
+  const pwInput = document.getElementById('pw_input');
+  const btn = document.querySelector('.pw-toggle');
+  if (pwInput.type === "password") {
+    pwInput.type = "text";
+    btn.innerText = "PW 숨기기";
+  } else {
+    pwInput.type = "password";
+    btn.innerText = "PW 보기";
+  }
+}
+</script>
+</body>
+</html>
