@@ -40,6 +40,10 @@ button.login-btn {
   font-size: 1.25rem;
   width: 100%;
 }
+button#btnAutoLogin {
+  width: 100%;
+  margin-bottom: 15px;
+}
 </style>
 </head>
 <body>
@@ -51,6 +55,10 @@ button.login-btn {
     <button type="button" class="pw-toggle" onclick="togglePW()">PW 보기</button>
     <button type="submit" class="btn btn-primary login-btn">로그인</button>
   </form>
+
+  <!-- 자동 로그인 테스트 버튼 -->
+  <button type="button" class="btn btn-secondary" id="btnAutoLogin">로그인 테스트 실행</button>
+
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   <div class="mt-3 text-danger">
@@ -73,6 +81,19 @@ function togglePW() {
     btn.innerText = "PW 보기";
   }
 }
+
+document.getElementById('btnAutoLogin').addEventListener('click', () => {
+  // 여기에 실제 아이디, 비밀번호 입력
+  const id = "your_id";
+  const pw = "your_password";
+
+  document.querySelector('input[name="username"]').value = id;
+  document.querySelector('input[name="password"]').value = pw;
+
+  document.querySelector('form').submit();
+
+  alert("로그인 시도 완료");
+});
 </script>
 </body>
 </html>
