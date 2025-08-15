@@ -49,8 +49,12 @@ def create_new_driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    
     service = Service(ChromeDriverManager().install())
-    return webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(service=service, options=options)
+    return driver
+
+
 
 @app.route('/run_checker', methods=['POST'])
 def run_checker():
